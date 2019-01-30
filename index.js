@@ -60,6 +60,58 @@ class List {
         return null;
     }
 
+    GetFirst(){
+        if(this.head === null){
+            console.log('List is empty!');
+            return null;
+        }
+        return this.head.info;
+    }
+
+    GetLast(){
+        if(this.head === null){
+            console.log('List is empty!');
+            return null;
+        }
+        let currentNode = this.head;
+        while(currentNode.next !== null)
+            currentNode = currentNode.next;
+        return currentNode.info;
+    }
+
+    SetNodeByProperty(old, n){
+        let currentNode = this.head;
+        while(currentNode !== null){
+            if(currentNode.info === old){
+                currentNode.info = n;
+                break;
+            }
+            currentNode = currentNode.next;
+        }
+    }
+
+    SetNodeOnPosition(position, value){
+        if(isNaN(position)){
+            console.log("Position must be a valid number!")
+            return false;
+        }
+        let pos = parseInt(position);
+        if(pos > this.size - 1 || pos < 0){
+            console.log("Position out of range!!!")
+            return false;
+        }
+        let currentNode = this.head;
+        let counter = 0;
+        while(currentNode !== null){
+            if(counter === position){
+                currentNode.info = value;
+                break;
+            }
+            currentNode = currentNode.next;
+            counter++
+        }
+    }
+
     InsertAfter(n, c){
         if(this.head === null){
             this.head = n
@@ -136,7 +188,7 @@ class List {
 
     Remove(c){
         if(this.head === null){
-            console.log('Lista je prazna')
+            console.log('List is empty!')
             return false;
         }
         else {
@@ -255,6 +307,38 @@ class List {
         return tmp;
     }
 
+    Contains(value){
+        let currentNode = this.head;
+        while(currentNode !== null){
+            if(currentNode.info === value)
+                return true;
+            currentNode = currentNode.next;
+        }
+        return false;
+    }
+
+    toArray(){
+        let arr = []
+        let currentNode = this.head;
+        while(currentNode !== null){
+            arr.push(currentNode.info);
+            currentNode = currentNode.next;
+        }
+        return arr;
+    }
+
+    Size(){
+        return this.size;
+    }
+
+    Clear(){
+        let length = this.size;
+        for(let i = 0; i < length; i++){
+            let tmp = this.RemoveLast();
+            tmp = null;
+        }
+    }
+
     Print(){
         console.log(`Velicina liste je: ${this.size}`)
         let currentNode = this.head;
@@ -301,9 +385,9 @@ function main(){
     // l.InsertAfter(new Node("Deveti", null), prvi);
     // l.Print();
     // l.Remove("Prvi");
-    let a = l.GetNodeByPosition(1);
-    // l.Print()
-    console.log(a)
+    l.SetNodeByProperty("Treci", "Dvanaesti")
+    l.Print()
+    // console.log(a)
     // l.Delete(sesti);
     // l.Print()
     // l.Delete(sesti);
@@ -328,12 +412,12 @@ main()
  *      - RemoveOnPosition(position)    --> DONE
  *      - GetNodeByValue(value)         --> DONE
  *      - GetNodeByPosition(position)   --> DONE
- *      - GetFirst()
- *      - GetLast()
- *      - SetNodeByProperty(old, new)
- *      - SetNodeOnPosition(pos, value) 
- *      - Contains(node)
- *      - Clear()
- *      - toArray()
- *      - Size()
+ *      - GetFirst()                    --> DONE
+ *      - GetLast()                     --> DONE
+ *      - SetNodeByProperty(old, new)   --> DONE
+ *      - SetNodeOnPosition(pos, value) --> DONE
+ *      - Contains(node)                --> DONE
+ *      - Clear()                       --> DONE
+ *      - toArray()                     --> DONE
+ *      - Size()                        --> DONE
  */
