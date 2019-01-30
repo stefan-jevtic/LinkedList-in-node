@@ -5,8 +5,9 @@ class List {
     }
 
     Append(n){
+        let node = new Node(n, null, null);
         if(this.head === null){
-            this.head = n
+            this.head = node
             this.head.prev = null;
         }
         else {
@@ -14,26 +15,28 @@ class List {
             while(currentNode.next !== null){
                 currentNode = currentNode.next;
             }
-            currentNode.next = n
+            currentNode.next = node
             currentNode.next.prev = currentNode;
         }
         this.size++;
     }
 
     Prepend(n){
-        let node = this.head;
-        if(node)
-            node.prev = n;
-        n.next = node;
-        n.prev = null
-        this.head = n;
+        let node = new Node(n, null, null);
+        let head = this.head;
+        if(head)
+            head.prev = node;
+        node.next = head;
+        node.prev = null
+        this.head = node;
+        this.size++;
     }
 
-    GetNodeByValue(value){
+    GetNodeByValue(value){ // should be private method in typescript
         let currentNode = this.head;
         while(currentNode !== null){
             if(currentNode.info === value)
-                return currentNode.info;
+                return currentNode;
             currentNode = currentNode.next;
         }
         return null;
@@ -112,43 +115,48 @@ class List {
         }
     }
 
-    InsertAfter(n, c){
+    InsertAfter(c, n){
+        let node = new Node(n, null, null);
+        c = this.GetNodeByValue(c);
         if(this.head === null){
-            this.head = n
+            this.head = node;
             this.head.prev = null;
         }
         else {
-            let node = c.next;
-            n.next = node;
-            if(node)
-                node.prev = n;
-            c.next = n;
-            n.prev = c;
+            let tmp = c.next;
+            node.next = tmp;
+            if(tmp)
+                tmp.prev = node;
+            c.next = node;
+            node.prev = c;
         }
         this.size++;
     }
 
-    InsertBefore(n, c){
+    InsertBefore(c, n){
+        let node = new Node(n, null, null);
+        c = this.GetNodeByValue(c);
         if(this.head === null){
-            this.head = n;
+            this.head = node;
             this.head.prev = null;
         }
         else {
-            let node = c.prev;
-            n.next = c;
-            n.prev = node;
-            c.prev = n;
-            if(node){
-                node.next = n;
+            let tmp = c.prev;
+            node.next = c;
+            node.prev = tmp;
+            c.prev = node;
+            if(tmp){
+                tmp.next = node;
             }
             else {
-                this.head = n;
+                this.head = node;
             }
         }
         this.size++;
     }
 
     InsertOnPosition(position, n){
+        let node = new Node(n, null, null);
         if(isNaN(position)){
             console.log("Position must be a valid number!")
             return false;
@@ -160,30 +168,31 @@ class List {
         }
 
         if(pos === 0){
-            let node = this.head;
-            n.next = node;
-            n.prev = null;
-            node.prev = n;
-            this.head = n;
+            let tmp = this.head;
+            node.next = tmp;
+            node.prev = null;
+            tmp.prev = node;
+            this.head = node;
         }
         else{
             let currentNode = this.head;
-            let node;
+            let tmp;
             let counter = 0;
             while(currentNode !== null){
                 if(pos === counter){
-                    node = currentNode;
+                    tmp = currentNode;
                     break;
                 }
                 currentNode = currentNode.next;
                 counter++;
             }
-            let pv = node.prev;
-            pv.next = n;
-            n.prev = pv;
-            n.next = node;
-            node.prev = n;
+            let pv = tmp.prev;
+            pv.next = node;
+            node.prev = pv;
+            node.next = tmp;
+            tmp.prev = node;
         }
+        this.size++;
     }
 
     Remove(c){
@@ -359,38 +368,30 @@ class Node {
 
 function main(){
     const l = new List();
-    // l.Prepend(new Node('Deveti', null))
-    l.Append(new Node("Prvi", null))
-    l.Append(new Node("Drugi", null))
-    l.Append(new Node("Treci", null))
-    l.Append(new Node("Cetvrti", null))
-    l.Append(new Node("Peti", null))
-    l.Append(new Node("Sesti", null))
-    // l.Prepend(new Node('Osmi', null))
-    // let treci = l.GetNodeByName("Osmi");
-    // l.InsertBefore(new Node("Deseti", null), treci);
-    // l.InsertOnPosition(3, new Node("Osamdesdrugi", null));
+    l.Prepend("Deveti")
+    l.Append("Prvi")
+    l.Append("Drugi")
+    l.Append("Treci")
+    l.Append("Cetvrti")
+    l.Append("Peti")
+    l.Append("Sesti")
+    l.InsertAfter("Cetvrti", "Osmi");
+    l.InsertBefore("Cetvrti", "Deveti")
+    l.InsertOnPosition(6, "Deseti");
+    l.Remove("Deveti")
+    l.RemoveFirst();
+    l.RemoveLast();
+    l.RemoveOnPosition(3)
     l.Print()
-    // let a = l.RemoveLast()
-    // console.log(a);
-    // l.Print()
-    // l.RemoveLast()
-    // let treci = l.GetNodeByName("Treci");
-    // l.InsertAfter(new Node("Sedmi", null), treci);
-    // l.Print();
-    // let sesti = l.GetNodeByName("Sesti");
-    // l.InsertAfter(new Node("Osmi", null), sesti);
-    // l.Print();
-    // let prvi = l.GetNodeByName("Prvi");
-    // l.InsertAfter(new Node("Deveti", null), prvi);
-    // l.Print();
-    // l.Remove("Prvi");
-    l.SetNodeByProperty("Treci", "Dvanaesti")
-    l.Print()
-    // console.log(a)
-    // l.Delete(sesti);
-    // l.Print()
-    // l.Delete(sesti);
+    console.log(l.GetFirst());
+    console.log(l.GetLast());
+    console.log(l.GetNodeByPosition(3));
+    console.log(l.Contains("Deveti"));
+    console.log(l.toArray());
+    console.log(l.Size());
+    l.SetNodeByProperty("Deveti", "Jedanaesti");
+    l.SetNodeOnPosition(0, "Glava porodice");
+    l.Print();
 }
 
 main()
